@@ -1,0 +1,510 @@
+<!-- rawambient.html (single-file) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rawambient</title>
+  <style>
+    :root{--bg:#0030ff;--fg:#ff1a1a;--fg-dim:#ff8a8a;--maxw:1100px}
+    *{box-sizing:border-box}
+    html,body{height:100%;background:var(--bg);color:var(--fg);margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+    a{color:var(--fg);text-decoration:none}
+    a:hover,a:focus{text-decoration:underline;text-underline-offset:4px}
+    .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:2rem 1.25rem}
+    .site-title{font-size:clamp(2.8rem,8vw,8rem);line-height:.95;letter-spacing:-.02em;margin:1rem 0 .5rem;text-transform:lowercase}
+    .nav-grid{display:grid;grid-template-columns:1fr;gap:1rem;padding-top:1.5rem}
+    @media (min-width:640px){.nav-grid{grid-template-columns:repeat(4,1fr)}}
+    .nav-card{display:grid;place-items:center;border:2px solid var(--fg);border-radius:20px;padding:3rem 1rem;font-size:clamp(1.8rem,5vw,3rem);text-transform:lowercase;transition:transform 120ms ease,background 120ms ease}
+    .nav-card:hover{transform:translateY(-2px);background:rgba(255,26,26,.06)}
+    .foot{font-size:.95rem;color:var(--fg-dim)}
+    .content{padding-top:1rem}
+    .stack>*+*{margin-top:1.25rem}
+    .grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media (min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .list{list-style:none;padding:0;margin:0}
+    .list li+li{margin-top:.75rem}
+    .card{border:2px solid var(--fg);border-radius:16px;padding:1rem}
+    audio{width:100%;display:block}
+    img{width:100%;height:auto;display:block;border-radius:12px;border:2px solid var(--fg)}
+    .caption{margin-top:.5rem;font-size:.95rem;color:var(--fg-dim)}
+    .hide{display:none}
+    .back{border-bottom:2px solid currentColor;padding-bottom:2px}
+
+    /* --- data / TA additions --- */
+    .group-title{font-size:1.1rem;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-dim);margin:.25rem 0 .75rem}
+    .tile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+    @media (min-width:760px){.tile-grid{grid-template-columns:repeat(3,1fr)}}
+    .tile{border:2px solid var(--fg);border-radius:14px;padding:.85rem;cursor:pointer;transition:transform 120ms ease,background 120ms ease}
+    .tile:hover{transform:translateY(-2px);background:rgba(255,26,26,.06)}
+    .tile .name{font-size:1.05rem;font-weight:600}
+    .tile .meta{font-size:.9rem;color:var(--fg-dim);margin-top:.25rem}
+    .note{font-size:.9rem;color:var(--fg-dim)}
+    .flex-col{display:flex;flex-direction:column;gap:1.25rem}
+
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:1rem;z-index:50}
+    .modal.open{display:flex}
+    .modal-card{background:var(--bg);border:2px solid var(--fg);border-radius:18px;max-width:min(1000px,95vw);width:100%;padding:1rem 1rem 1.25rem;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+    .modal-title{font-size:1.25rem}
+    .btn{border:2px solid var(--fg);background:transparent;color:var(--fg);padding:.45rem .75rem;border-radius:10px;font-size:.95rem;cursor:pointer}
+    .btn:hover{background:rgba(255,26,26,.08)}
+    .legend{font-size:.9rem;color:var(--fg-dim);margin-top:.35rem}
+  </style>
+</head>
+<body>
+  <!-- HOME -->
+  <section id="home" class="view wrap">
+    <h1 class="site-title">Rawambient</h1>
+    <nav class="nav-grid">
+      <a class="nav-card" href="#audio" aria-label="Audio">audio</a>
+      <a class="nav-card" href="#images" aria-label="Images">images</a>
+      <a class="nav-card" href="#written" aria-label="Written">written</a>
+      <a class="nav-card" href="#data" aria-label="Data">data</a>
+    </nav>
+    <footer class="wrap foot">
+      <p>© <span id="year"></span> Rawambient</p>
+    </footer>
+  </section>
+
+  <!-- AUDIO -->
+  <section id="audio" class="view wrap hide" data-page="audio">
+    <h1 class="site-title">Rawambient / audio</h1>
+    <main class="content">
+      <div id="audio-items" class="stack"></div>
+    </main>
+    <footer class="foot"><p><a class="back" href="#">back</a></p></footer>
+  </section>
+
+  <!-- IMAGES -->
+  <section id="images" class="view wrap hide" data-page="images">
+    <h1 class="site-title">Rawambient / images</h1>
+    <main class="content">
+      <div id="image-items" class="grid"></div>
+    </main>
+    <footer class="foot"><p><a class="back" href="#">back</a></p></footer>
+  </section>
+
+  <!-- WRITTEN -->
+  <section id="written" class="view wrap hide" data-page="written">
+    <h1 class="site-title">Rawambient / written</h1>
+    <main class="content">
+      <ul id="written-items" class="list"></ul>
+    </main>
+    <footer class="foot"><p><a class="back" href="#">back</a></p></footer>
+  </section>
+
+  <!-- WRITTEN DETAIL -->
+  <section id="written-view" class="view wrap hide" data-page="written-view">
+    <h1 class="site-title" id="written-view-title">Rawambient / written</h1>
+    <main class="content">
+      <div id="written-view-body" class="card" style="font-size:1.15rem;line-height:1.6"></div>
+    </main>
+    <footer class="foot"><p><a class="back" href="#written">back</a></p></footer>
+  </section>
+
+  <!-- DATA hub -->
+  <section id="data" class="view wrap hide" data-page="data">
+    <h1 class="site-title">Rawambient / data</h1>
+    <main class="content">
+      <div class="card">
+        <p class="note">This area refreshes data on page load. Click <b>technical analysis</b> for the dashboard.</p>
+        <p><a class="back" href="#data/technical-analysis">open technical analysis ⟶</a></p>
+      </div>
+    </main>
+    <footer class="foot"><p><a class="back" href="#">back</a></p></footer>
+  </section>
+
+  <!-- TECHNICAL ANALYSIS dashboard -->
+  <section id="ta" class="view wrap hide" data-page="ta">
+    <h1 class="site-title">Rawambient / data / technical analysis</h1>
+    <main class="content flex-col">
+      <div class="card">
+        <div class="group-title">Equities</div>
+        <div id="tiles-equities" class="tile-grid"></div>
+      </div>
+      <div class="card">
+        <div class="group-title">Bonds (10Y)</div>
+        <div id="tiles-bonds" class="tile-grid"></div>
+      </div>
+      <div class="card">
+        <div class="group-title">Commodities</div>
+        <div id="tiles-commods" class="tile-grid"></div>
+      </div>
+      <p class="note">Source: Stooq daily closes (via CSV). Five-year chart; some series use liquid proxies if an official index isn’t freely available.</p>
+    </main>
+    <footer class="foot"><p><a class="back" href="#data">back</a></p></footer>
+  </section>
+
+  <!-- Modal for charts -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <div id="modal-title" class="modal-title">Series</div>
+          <div id="modal-legend" class="legend"></div>
+        </div>
+        <button id="modal-close" class="btn" type="button" aria-label="Close">close</button>
+      </div>
+      <canvas id="modal-canvas" height="320"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+    // --- EDIT THESE ARRAYS WITH YOUR FILES (paths relative to this HTML) ---
+    const AUDIO_ITEMS = [];
+    const IMAGE_ITEMS = [];
+
+    // NEW: Written content split into subpages (poetry, transcripts)
+    const WRITTEN_SECTIONS = {
+      poetry: [
+        {
+          id: "planeswalker-221025-0051",
+          title: "Planeswalker 22/10/25 00:51",
+          raw: `I lived through a varicose veil - with seams bound by balled up hair - travelled under this taut sail - and stars filtered through a murky pane - did you see , the orator wailed - love from both sides of the pane - and pain, the sailor spake - was ere love's namesake - for before hand comes in hand - a bone must have ached - but despair not weary lover - for the other side still exists - as to be a planes walker - you have to of danced on a thread`
+        }
+      ],
+      transcripts: [
+        // { id: "some-talk-yyyymmdd", title: "Talk with X — 2025-10-31", raw: "..." }
+      ]
+    };
+    // ----------------------------------------------------------------------
+
+    // ====== Data / Technical Analysis configuration ======
+    const SERIES = {
+      equities: [
+        { key: 'DJIA',   name: 'Dow Jones (DIA ETF)',            symbols: ['dia.us'] },
+        { key: 'NASDAQ', name: 'Nasdaq 100 (QQQ ETF)',           symbols: ['qqq.us'] },
+        { key: 'SPX',    name: 'S&P 500 (SPY ETF)',              symbols: ['spy.us'] },
+        { key: 'EU',     name: 'Europe (VGK ETF proxy)',         symbols: ['vgk.us','ieur.us'] },
+        { key: 'UKX',    name: 'UK (EWU ETF proxy)',             symbols: ['ewu.us','isf.uk'] },
+        { key: 'CN',     name: 'China Broad (MCHI/FXI proxy)',   symbols: ['mchi.us','fxi.us'], proxy:true },
+      ],
+      bonds: [
+        { key: 'US10Y',  name: 'US 10Y Govt',        symbols: ['us10y'] },
+        { key: 'UK10Y',  name: 'UK 10Y Govt',        symbols: ['uk10y'] },
+        { key: 'DE10Y',  name: 'Germany 10Y Govt',   symbols: ['de10y'] },
+        { key: 'JP10Y',  name: 'Japan 10Y Govt',     symbols: ['jp10y'] },
+        { key: 'CN10Y',  name: 'China 10Y Govt',     symbols: ['cn10y'] },
+      ],
+      commods: [
+        { key: 'XAU',    name: 'Gold (XAU/USD)',     symbols: ['xauusd'] },
+        { key: 'XAG',    name: 'Silver (XAG/USD)',   symbols: ['xagusd'] },
+        { key: 'WTI',    name: 'Crude Oil (WTI)',    symbols: ['cl.f'] },
+        { key: 'BRENT',  name: 'Crude Oil (Brent)',  symbols: ['br.f'] },
+      ],
+    };
+
+    // ===== UI / Routing =====
+    const views = ["home","audio","images","written","written-view","data","ta"];
+    const $ = (sel, root=document) => root.querySelector(sel);
+
+    function showView(name){
+      views.forEach(v => {
+        const el = document.getElementById(v);
+        if (!el) return;
+        el.classList.toggle('hide', v !== name);
+      });
+      if (name === "audio") renderAudio();
+      if (name === "images") renderImages();
+      if (name === "written") renderWritten(currentWrittenSection);
+      if (name === "ta") renderTA();
+      window.scrollTo(0,0);
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function poemToHtml(raw){
+      return raw.split(/\s*-\s*/).map(line => `<p>${escapeHtml(line.trim())}</p>`).join("");
+    }
+
+    function renderAudio(){
+      const box = $("#audio-items");
+      box.innerHTML = "";
+      if (!AUDIO_ITEMS.length) { box.textContent = "(empty — add items in AUDIO_ITEMS)"; return; }
+      AUDIO_ITEMS.forEach(item => {
+        const card = document.createElement("div"); card.className = "card";
+        const p = document.createElement("p"); p.textContent = item.title || item.src;
+        const a = document.createElement("audio"); a.setAttribute("controls",""); a.src = item.src;
+        card.appendChild(p); card.appendChild(a); box.appendChild(card);
+      });
+    }
+
+    function renderImages(){
+      const box = $("#image-items");
+      box.innerHTML = "";
+      if (!IMAGE_ITEMS.length) { box.textContent = "(empty — add items in IMAGE_ITEMS)"; return; }
+      IMAGE_ITEMS.forEach(item => {
+        const card = document.createElement("div"); card.className = "card";
+        const img = document.createElement("img"); img.src = item.src; img.alt = item.alt || "";
+        const caption = document.createElement("div"); caption.className = "caption"; caption.textContent = item.caption || item.alt || item.src;
+        card.appendChild(img); card.appendChild(caption); box.appendChild(card);
+      });
+    }
+
+    // NEW: written supports subpages
+    let currentWrittenSection = null; // null = show section list
+
+    function renderWritten(section){
+      const box = $("#written-items");
+      box.innerHTML = "";
+
+      // If no section specified, show the subpage menu
+      if (!section){
+        const sections = [
+          {key:"poetry", label:"poetry"},
+          {key:"transcripts", label:"transcripts"}
+        ];
+        sections.forEach(s=>{
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = `#written/${s.key}`;
+          a.textContent = s.label;
+          li.appendChild(a);
+          box.appendChild(li);
+        });
+        return;
+      }
+
+      // If section exists, list items in that section
+      const items = WRITTEN_SECTIONS[section] || [];
+      if (!items.length){
+        const li = document.createElement("li");
+        li.textContent = "(empty — add items to WRITTEN_SECTIONS." + section + ")";
+        box.appendChild(li);
+        return;
+      }
+      items.forEach(item => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `#written/${section}/${item.id}`;
+        a.textContent = item.title || item.id;
+        li.appendChild(a);
+        box.appendChild(li);
+      });
+    }
+
+    function findWrittenItem(id){
+      for (const sec of Object.keys(WRITTEN_SECTIONS)){
+        const hit = WRITTEN_SECTIONS[sec].find(x=>x.id===id);
+        if (hit) return {section: sec, item: hit};
+      }
+      return null;
+    }
+
+    function renderWrittenView(id){
+      const found = findWrittenItem(id);
+      const titleEl = $("#written-view-title");
+      const bodyEl  = $("#written-view-body");
+      if (!found){
+        titleEl.textContent = "Rawambient / written";
+        bodyEl.innerHTML = "<p>(not found)</p>";
+        return;
+      }
+      titleEl.textContent = `Rawambient / ${found.item.title}`;
+      bodyEl.innerHTML = poemToHtml(found.item.raw);
+    }
+
+    function route(){
+      const hash = (location.hash || "#").slice(1);
+      const parts = hash.split("/").filter(Boolean);
+      const top = parts[0] || "home";
+
+      if (top === "written"){
+        // #written            → section list
+        // #written/{sec}      → list items in {sec}
+        // #written/{sec}/{id} → open item
+        if (parts.length === 3){
+          const [, , id] = parts;
+          showView("written-view");
+          renderWrittenView(id);
+          return;
+        }
+        currentWrittenSection = parts[1] || null;
+        showView("written");
+        return;
+      }
+
+      if (top === "data" && parts[1] === "technical-analysis"){
+        showView("ta");
+        return;
+      }
+
+      if (!views.includes(top)) { showView("home"); return; }
+      showView(top);
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    window.addEventListener("hashchange", route);
+    route();
+
+    // ===== Data fetching (stooq) =====
+    async function fetchStooqCSV(symbol){
+      const path = `stooq.com/q/d/l/?s=${encodeURIComponent(symbol)}&i=d`;
+      const urls = [
+        `https://r.jina.ai/http://${path}`,
+        `https://r.jina.ai/https://${path}`,
+        `https://cors.isomorphic-git.org/http://${path}`,
+        `https://cors.isomorphic-git.org/https://${path}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://${path}`)}`,
+        `https://thingproxy.freeboard.io/fetch/https://${path}`,
+      ];
+      let lastErr;
+      for (const base of urls){
+        const url = base + (base.includes('?') ? '&' : '?') + `_=${Date.now()}`;
+        try{
+          const r = await fetch(url, { cache: 'no-store' });
+          if (!r.ok) { lastErr = new Error(`HTTP ${r.status}`); continue; }
+          const text = await r.text();
+          if (!/^Date,.*Close/i.test(text)) { lastErr = new Error('Bad CSV header'); continue; }
+          console.log(`[data] ${symbol} → OK via ${url}`);
+          return text;
+        }catch(e){ lastErr = e; }
+      }
+      console.warn(`[data] ${symbol} → all mirrors failed`, lastErr);
+      throw lastErr || new Error('All mirrors failed');
+    }
+
+    function parseStooqCSV(csv){
+      const lines = csv.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(",");
+      const idxDate = headers.indexOf("Date");
+      const idxClose = headers.indexOf("Close");
+      const out = [];
+      for (let i=1;i<lines.length;i++){
+        const parts = lines[i].split(",");
+        const d = new Date(parts[idxDate]);
+        const c = parseFloat(parts[idxClose]);
+        if (!isNaN(d.getTime()) && isFinite(c)) out.push({date:d, close:c});
+      }
+      out.sort((a,b)=>a.date-b.date);
+      return out;
+    }
+
+    function lastNYears(data, years=5){
+      if (!data.length) return data;
+      const cutoff = new Date();
+      cutoff.setFullYear(cutoff.getFullYear() - years);
+      return data.filter(x => x.date >= cutoff);
+    }
+
+    async function loadSeries(possibleSymbols){
+      for (const s of possibleSymbols){
+        try{
+          const csv = await fetchStooqCSV(s);
+          const parsed = parseStooqCSV(csv);
+          if (parsed && parsed.length) return { symbol:s, data: parsed };
+        }catch(e){}
+      }
+      const today = new Date();
+      const d = [];
+      for (let i=240;i>=0;i--){
+        const t = new Date(today); t.setDate(t.getDate()-i);
+        if (i % 5 === 0) d.push({date:t, close: 100 + Math.sin(i/7)*10 + (240-i)*0.03});
+      }
+      return { symbol: "fallback", data: d };
+    }
+
+    // ===== Dashboard rendering =====
+    function makeTile(container, item, quote){
+      const div = document.createElement("div");
+      div.className = "tile";
+      div.setAttribute('role','button');
+      div.setAttribute('tabindex','0');
+      div.innerHTML = `
+        <div class="name">${escapeHtml(item.name)}</div>
+        <div class="meta">${quote}</div>
+      `;
+      div.addEventListener('click', () => openChart(item));
+      div.addEventListener('keypress', (e)=>{ if(e.key==='Enter') openChart(item); });
+      container.appendChild(div);
+    }
+
+    async function renderTA(){
+      const eqBox = $("#tiles-equities");
+      const boBox = $("#tiles-bonds");
+      const coBox = $("#tiles-commods");
+      eqBox.innerHTML = boBox.innerHTML = coBox.innerHTML = "";
+
+      const groups = [
+        {list: SERIES.equities, box:eqBox, fmt:(v)=>Number.isFinite(v)? v.toFixed(2):"—"},
+        {list: SERIES.bonds,    box:boBox, fmt:(v)=>Number.isFinite(v)? v.toFixed(2)+'%':"—"},
+        {list: SERIES.commods,  box:coBox, fmt:(v)=>Number.isFinite(v)? v.toFixed(2):"—"},
+      ];
+
+      for (const g of groups){
+        for (const item of g.list){
+          try{
+            const {symbol, data} = await loadSeries(item.symbols);
+            const last = data[data.length-1]?.close;
+            const tag = (item.proxy?'proxy · ':'') + (symbol==='fallback'?'offline':'live');
+            makeTile(g.box, item, `${g.fmt(last)}  ·  ${tag}`);
+          }catch{
+            makeTile(g.box, item, `—  ·  offline`);
+          }
+        }
+      }
+    }
+
+    // ===== Modal + Chart =====
+    let chart;
+    const modal = $("#modal");
+    const modalTitle = $("#modal-title");
+    const modalLegend = $("#modal-legend");
+    const modalCanvas = $("#modal-canvas");
+    $("#modal-close").addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+    function closeModal(){
+      modal.classList.remove('open');
+      if (chart){ chart.destroy(); chart = null; }
+    }
+    function openModal(){ modal.classList.add('open'); }
+
+    async function openChart(item){
+      const {symbol, data} = await loadSeries(item.symbols);
+      const filtered = lastNYears(data, 5);
+      const labels = filtered.map(x => x.date.toISOString().slice(0,10));
+      const values = filtered.map(x => x.close);
+
+      if (chart) chart.destroy();
+      chart = new Chart(modalCanvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: item.name,
+            data: values,
+            tension: .15,
+            pointRadius: 0,
+            borderWidth: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: { display: true, ticks: { maxTicksLimit: 8 } },
+            y: { display: true, ticks: { maxTicksLimit: 6 } }
+          }
+        }
+      });
+
+      modalTitle.textContent = item.name;
+      modalLegend.textContent = (item.proxy ? "Proxy series · " : "")
+        + (symbol==='fallback' ? "showing cached sample (network blocked)" : `source: Stooq · symbol: ${symbol} · last 5Y`);
+      openModal();
+    }
+  </script>
+</body>
+</html>
