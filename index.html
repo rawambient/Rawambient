@@ -20,18 +20,24 @@
     .foot{font-size:.95rem;color:var(--fg-dim)}
     .content{padding-top:1rem}
     .stack>*+*{margin-top:1.25rem}
-    .grid{display:grid;grid-template-columns:1fr;gap:1rem}
+
+    /* 3-column grid for images */
+    .grid{display:grid;grid-template-columns:1fr;gap:.75rem}
     @media (min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+
     .list{list-style:none;padding:0;margin:0}
     .list li+li{margin-top:.75rem}
     .card{border:2px solid var(--fg);border-radius:16px;padding:1rem}
     audio{width:100%;display:block}
+
     img{width:100%;height:auto;display:block;border-radius:12px;border:2px solid var(--fg)}
+    .thumb{cursor:pointer}
+
     .caption{margin-top:.5rem;font-size:.95rem;color:var(--fg-dim)}
     .hide{display:none}
     .back{border-bottom:2px solid currentColor;padding-bottom:2px}
 
-    /* --- data / TA additions --- */
+    /* data / TA */
     .group-title{font-size:1.1rem;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-dim);margin:.25rem 0 .75rem}
     .tile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
     @media (min-width:760px){.tile-grid{grid-template-columns:repeat(3,1fr)}}
@@ -42,7 +48,7 @@
     .note{font-size:.9rem;color:var(--fg-dim)}
     .flex-col{display:flex;flex-direction:column;gap:1.25rem}
 
-    /* modal */
+    /* generic modal (charts + image lightbox) */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:1rem;z-index:50}
     .modal.open{display:flex}
     .modal-card{background:var(--bg);border:2px solid var(--fg);border-radius:18px;max-width:min(1000px,95vw);width:100%;padding:1rem 1rem 1.25rem;box-shadow:0 10px 40px rgba(0,0,0,.35)}
@@ -151,15 +157,94 @@
     </div>
   </div>
 
+  <!-- Modal for IMAGE lightbox -->
+  <div id="img-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="img-modal-title">
+    <div class="modal-card" style="max-width:min(1200px,96vw);">
+      <div class="modal-head">
+        <div id="img-modal-title" class="modal-title">Image</div>
+        <button id="img-modal-close" class="btn" type="button" aria-label="Close image">close</button>
+      </div>
+      <img id="img-modal-img" src="" alt="" />
+      <div id="img-modal-caption" class="legend"></div>
+    </div>
+  </div>
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <script>
-    // --- EDIT THESE ARRAYS WITH YOUR FILES (paths relative to this HTML) ---
+    // ===== CONTENT ARRAYS =====
     const AUDIO_ITEMS = [];
-    const IMAGE_ITEMS = [];
 
-    // NEW: Written content split into subpages (poetry, transcripts)
+    // Add your images here. Each object MUST be wrapped in { } and separated by commas.
+    // Files should live in an "images" folder next to this HTML.
+    const IMAGE_ITEMS = [
+
+      {
+        src: "images/DSC_0031.jpg",
+      },
+      {
+        src: "images/6AB59D8C-EE7F-4963-8F0C-AC33BF0C9BDC.jpeg",
+      },
+      {
+        src: "images/59D70E52-9F0D-4040-AA9E-BBF524C52747_1_102_o.jpeg",
+      },
+      {
+        src: "images/F29510AD-4521-4382-A4DD-54E7FC57F8D3.jpeg",
+      },
+      {
+        src: "images/637BEA2E-D721-4619-AA84-164379A7C9C7_1_105_c.jpeg"
+      },
+      {
+        src:"images/AA8EA677-E944-437F-9C16-6380BFC278EB.jpeg"
+      },
+      {
+        src:"images/3FB966C7-91DC-4F71-B6AF-0C556F0138CD_1_105_c.jpeg"
+      },
+      {
+        src:"images/8E8D7EA9-33BA-4F35-A874-6A7E26C055F2.jpeg"
+      },
+      {
+        src:"images/8F595C5C-BC05-4A47-8E8D-31689D1FF06D.jpeg"
+      },
+      {
+        src:"images/4A390439-B44A-40FF-A65A-5C94DD38EF7E_1_102_o.jpeg"
+      },
+      {
+        src:"images/642CAB09-4E58-4801-B1AB-E47F9B51063E_1_102_o.jpeg"
+      },
+      {
+        src:"images/BC29B74F-BCAA-498A-B191-E84225453888_1_102_o.jpeg"
+      },
+      {
+        src:"images/E61CC9CA-78C1-4AFE-A90D-428309199ECA.jpeg"
+      },
+      {
+        src:"images/E06456C2-4772-403A-B943-C3C04DA44576_1_102_o.jpeg"
+      },
+      {
+        src:"images/1FC957DE-A7D0-4468-85FF-343290EB7BBD_1_102_o.jpeg"
+      },
+      {
+        src:"images/20F0C48C-CC4E-48C0-AB0F-E0F90EA32EF3_1_102_o.jpeg"
+      },
+      {
+        src:"images/C5DBCCF4-A298-4A98-81A6-31A2F214BF84_1_102_o.jpeg"
+      },
+      {
+        src:"images/D0092E7B-0A4D-4BA4-9E75-008850D3A3A4_1_102_o.jpeg"
+      },
+      {
+        src:""
+      },
+      {
+        src:""
+      },
+
+      // add more like:
+      // { src: "images/another-file.jpeg", alt: "Description", caption: "Caption text" },
+    ];
+
     const WRITTEN_SECTIONS = {
       poetry: [
         {
@@ -168,13 +253,10 @@
           raw: `I lived through a varicose veil - with seams bound by balled up hair - travelled under this taut sail - and stars filtered through a murky pane - did you see , the orator wailed - love from both sides of the pane - and pain, the sailor spake - was ere love's namesake - for before hand comes in hand - a bone must have ached - but despair not weary lover - for the other side still exists - as to be a planes walker - you have to of danced on a thread`
         }
       ],
-      transcripts: [
-        // { id: "some-talk-yyyymmdd", title: "Talk with X — 2025-10-31", raw: "..." }
-      ]
+      transcripts: []
     };
-    // ----------------------------------------------------------------------
 
-    // ====== Data / Technical Analysis configuration ======
+    // ===== Data / Technical Analysis configuration =====
     const SERIES = {
       equities: [
         { key: 'DJIA',   name: 'Dow Jones (DIA ETF)',            symbols: ['dia.us'] },
@@ -235,26 +317,38 @@
       });
     }
 
+    // ===== IMAGES: grid + lightbox =====
     function renderImages(){
       const box = $("#image-items");
       box.innerHTML = "";
       if (!IMAGE_ITEMS.length) { box.textContent = "(empty — add items in IMAGE_ITEMS)"; return; }
       IMAGE_ITEMS.forEach(item => {
-        const card = document.createElement("div"); card.className = "card";
-        const img = document.createElement("img"); img.src = item.src; img.alt = item.alt || "";
-        const caption = document.createElement("div"); caption.className = "caption"; caption.textContent = item.caption || item.alt || item.src;
-        card.appendChild(img); card.appendChild(caption); box.appendChild(card);
+        const card = document.createElement("div");
+        card.className = "card";
+        const img = document.createElement("img");
+        img.src = item.src;
+        img.alt = item.alt || "";
+        img.classList.add("thumb");
+        const caption = document.createElement("div");
+        caption.className = "caption";
+        caption.textContent = item.caption || item.alt || item.src;
+
+        img.addEventListener("click", () => openImgModal(item));
+        img.addEventListener("keypress", (e) => { if (e.key === "Enter") openImgModal(item); });
+
+        card.appendChild(img);
+        card.appendChild(caption);
+        box.appendChild(card);
       });
     }
 
-    // NEW: written supports subpages
+    // ===== WRITTEN =====
     let currentWrittenSection = null; // null = show section list
 
     function renderWritten(section){
       const box = $("#written-items");
       box.innerHTML = "";
 
-      // If no section specified, show the subpage menu
       if (!section){
         const sections = [
           {key:"poetry", label:"poetry"},
@@ -271,7 +365,6 @@
         return;
       }
 
-      // If section exists, list items in that section
       const items = WRITTEN_SECTIONS[section] || [];
       if (!items.length){
         const li = document.createElement("li");
@@ -316,9 +409,6 @@
       const top = parts[0] || "home";
 
       if (top === "written"){
-        // #written            → section list
-        // #written/{sec}      → list items in {sec}
-        // #written/{sec}/{id} → open item
         if (parts.length === 3){
           const [, , id] = parts;
           showView("written-view");
@@ -505,6 +595,27 @@
         + (symbol==='fallback' ? "showing cached sample (network blocked)" : `source: Stooq · symbol: ${symbol} · last 5Y`);
       openModal();
     }
+
+    // ===== IMAGE MODAL =====
+    const imgModal = $("#img-modal");
+    const imgModalImg = $("#img-modal-img");
+    const imgModalCaption = $("#img-modal-caption");
+
+    function openImgModal(item){
+      imgModalImg.src = item.src;
+      imgModalImg.alt = item.alt || "";
+      $("#img-modal-title").textContent = item.caption || item.alt || "Image";
+      imgModalCaption.textContent = item.caption || "";
+      imgModal.classList.add("open");
+    }
+    function closeImgModal(){
+      imgModal.classList.remove("open");
+      imgModalImg.src = "";
+    }
+
+    $("#img-modal-close").addEventListener("click", closeImgModal);
+    imgModal.addEventListener("click", (e)=>{ if (e.target === imgModal) closeImgModal(); });
+
   </script>
 </body>
 </html>
