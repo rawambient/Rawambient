@@ -1,4 +1,3 @@
-<!-- rawambient.html (single-file) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,7 +26,43 @@
 
     .list{list-style:none;padding:0;margin:0}
     .list li+li{margin-top:.75rem}
-    .card{border:2px solid var(--fg);border-radius:16px;padding:1rem}
+
+    /* CARD BASE */
+    /* Base card */
+.card{
+  border:2px solid var(--fg);
+  border-radius:16px;
+  padding:1rem;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Canon High 2023 – fill entire interior with folk image */
+.card--canon{
+  background-image:url("Images 1/IMG_2896.jpg");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;   /* fills the whole interior of the border */
+}
+
+/* 2023/10/15 – fill card with goats/tree design */
+.card--oct15{
+  background-image:url("Images 2/BD0424D8-6DE9-47C7-88A3-CBE8A80D47B0.PNG");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+}
+
+/* Practicing Emotional Balance – card background */
+.card--balance{
+  background-image:url("Images 1/IMG_3060.jpg");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+}
+
+
+
     audio{width:100%;display:block}
 
     img{width:100%;height:auto;display:block;border-radius:12px;border:2px solid var(--fg)}
@@ -174,88 +209,54 @@
 
   <script>
     // ===== CONTENT ARRAYS =====
-    const AUDIO_ITEMS = [];
+    const AUDIO_ITEMS = []; // currently unused; kept for future simple audio list if you want it
+
+    // Grouped audio sections (e.g. DJ sets, mixes, etc.)
+    const AUDIO_SECTIONS = {
+      sets: [
+        {
+          id: "canon-high-2023",
+          title: "Canon High 2023",
+          // adjust this path if you name/place the file differently
+          src: "audio/canon-high-2023.mp3"
+        },
+        {
+          id: "2023/10/15",
+          title: "2023/10/15",
+          src: "audio/20231015.wav"
+        },
+        {
+          id: "Practicing Emotional Balance",
+          title: "Practicing Emotional Balance",
+          src: "audio/Practicing Emotional Balance.wav"
+        }
+      ]
+    };
 
     // Add your images here. Each object MUST be wrapped in { } and separated by commas.
-    // Files should live in an "images" folder next to this HTML.
-    
-
-      // add more like:
-      // { src: "images/another-file.jpeg", alt: "Description", caption: "Caption text" },
     const IMAGE_ITEMS = [
-  // all files that are inside the “Images 1” folder
-  {
-    src: "Images 1/6AB59D8C-EE7F-4963-8F0C-AC33BF0C9BDC.jpeg",
-    caption: "6AB59D8C..."
-  },
-  {
-    src: "Images 1/59D70E52-9F0D-4040-AA9E-BBF524C52747_1_102_o.jpeg",
-    caption: "59D70E52..."
-  },
-  {
-    src: "Images 1/F29510AD-4521-4382-A4DD-54E7FC57F8D3.jpeg",
-    caption: "F29510AD..."
-  },
-  {
-    src: "Images 1/637BEA2E-D721-4619-AA84-164379A7C9C7_1_105_c.jpeg",
-    caption: "637BEA2E..."
-  },
-  {
-    src: "Images 1/AA8EA677-E944-437F-9C16-6380BFC278EB.jpeg",
-    caption: "AA8EA677..."
-  },
-  {
-    src: "Images 1/3FB966C7-91DC-4F71-B6AF-0C556F0138CD_1_105_c.jpeg",
-    caption: "3FB966C7..."
-  },
-  {
-    src: "Images 1/8E8D7EA9-33BA-4F35-A874-6A7E26C055F2.jpeg",
-    caption: "8E8D7EA9..."
-  },
-  {
-    src: "Images 1/8F595C5C-BC05-4A47-8E8D-31689D1FF06D.jpeg",
-    caption: "8F595C5C..."
-  },
+      // from “Images 1” folder
+      { src: "Images 1/DSC_0031.jpg", caption: "DSC_0031" },
+      { src: "Images 1/6AB59D8C-EE7F-4963-8F0C-AC33BF0C9BDC.jpeg", caption: "6AB59D8C..." },
+      { src: "Images 1/59D70E52-9F0D-4040-AA9E-BBF524C52747_1_102_o.jpeg", caption: "59D70E52..." },
+      { src: "Images 1/F29510AD-4521-4382-A4DD-54E7FC57F8D3.jpeg", caption: "F29510AD..." },
+      { src: "Images 1/637BEA2E-D721-4619-AA84-164379A7C9C7_1_105_c.jpeg", caption: "637BEA2E..." },
+      { src: "Images 1/AA8EA677-E944-437F-9C16-6380BFC278EB.jpeg", caption: "AA8EA677..." },
+      { src: "Images 1/3FB966C7-91DC-4F71-B6AF-0C556F0138CD_1_105_c.jpeg", caption: "3FB966C7..." },
+      { src: "Images 1/8E8D7EA9-33BA-4F35-A874-6A7E26C055F2.jpeg", caption: "8E8D7EA9..." },
+      { src: "Images 1/8F595C5C-BC05-4A47-8E8D-31689D1FF06D.jpeg", caption: "8F595C5C..." },
 
-  // all files that are inside the “Images 2” folder
-  {
-    src: "Images 2/4A390439-B44A-40FF-A65A-5C94DD38EF7E_1_102_o.jpeg",
-    caption: "4A390439..."
-  },
-  {
-    src: "Images 2/642CAB09-4E58-4801-B1AB-E47F9B51063E_1_102_o.jpeg",
-    caption: "642CAB09..."
-  },
-  {
-    src: "Images 2/BC29B74F-BCAA-498A-B191-E84225453888_1_102_o.jpeg",
-    caption: "BC29B74F..."
-  },
-  {
-    src: "Images 2/E61CC9CA-78C1-4AFE-A90D-428309199ECA.jpeg",
-    caption: "E61CC9CA..."
-  },
-  {
-    src: "Images 2/E06456C2-4772-403A-B943-C3C04DA44576_1_102_o.jpeg",
-    caption: "E06456C2..."
-  },
-  {
-    src: "Images 2/1FC957DE-A7D0-4468-85FF-343290EB7BBD_1_102_o.jpeg",
-    caption: "1FC957DE..."
-  },
-  {
-    src: "Images 2/20F0C48C-CC4E-48C0-AB0F-E0F90EA32EF3_1_102_o.jpeg",
-    caption: "20F0C48C..."
-  },
-  {
-    src: "Images 2/C5DBCCF4-A298-4A98-81A6-31A2F214BF84_1_102_o.jpeg",
-    caption: "C5DBCCF4..."
-  },
-  {
-    src: "Images 2/D0092E7B-0A4D-4BA4-9E75-008850D3A3A4_1_102_o.jpeg",
-    caption: "D0092E7B..."
-  }
-];
-
+      // from “Images 2” folder
+      { src: "Images 2/4A390439-B44A-40FF-A65A-5C94DD38EF7E_1_102_o.jpeg", caption: "4A390439..." },
+      { src: "Images 2/642CAB09-4E58-4801-B1AB-E47F9B51063E_1_102_o.jpeg", caption: "642CAB09..." },
+      { src: "Images 2/BC29B74F-BCAA-498A-B191-E84225453888_1_102_o.jpeg", caption: "BC29B74F..." },
+      { src: "Images 2/E61CC9CA-78C1-4AFE-A90D-428309199ECA.jpeg", caption: "E61CC9CA..." },
+      { src: "Images 2/E06456C2-4772-403A-B943-C3C04DA44576_1_102_o.jpeg", caption: "E06456C2..." },
+      { src: "Images 2/1FC957DE-A7D0-4468-85FF-343290EB7BBD_1_102_o.jpeg", caption: "1FC957DE..." },
+      { src: "Images 2/20F0C48C-CC4E-48C0-AB0F-E0F90EA32EF3_1_102_o.jpeg", caption: "20F0C48C..." },
+      { src: "Images 2/C5DBCCF4-A298-4A98-81A6-31A2F214BF84_1_102_o.jpeg", caption: "C5DBCCF4..." },
+      { src: "Images 2/D0092E7B-0A4D-4BA4-9E75-008850D3A3A4_1_102_o.jpeg", caption: "D0092E7B..." }
+    ];
 
     const WRITTEN_SECTIONS = {
       poetry: [
@@ -271,25 +272,25 @@
     // ===== Data / Technical Analysis configuration =====
     const SERIES = {
       equities: [
-        { key: 'DJIA',   name: 'Dow Jones (DIA ETF)',            symbols: ['dia.us'] },
-        { key: 'NASDAQ', name: 'Nasdaq 100 (QQQ ETF)',           symbols: ['qqq.us'] },
-        { key: 'SPX',    name: 'S&P 500 (SPY ETF)',              symbols: ['spy.us'] },
-        { key: 'EU',     name: 'Europe (VGK ETF proxy)',         symbols: ['vgk.us','ieur.us'] },
-        { key: 'UKX',    name: 'UK (EWU ETF proxy)',             symbols: ['ewu.us','isf.uk'] },
-        { key: 'CN',     name: 'China Broad (MCHI/FXI proxy)',   symbols: ['mchi.us','fxi.us'], proxy:true },
+        { key: 'DJIA',   name: 'Dow Jones (DIA ETF)',          symbols: ['dia.us'] },
+        { key: 'NASDAQ', name: 'Nasdaq 100 (QQQ ETF)',         symbols: ['qqq.us'] },
+        { key: 'SPX',    name: 'S&P 500 (SPY ETF)',            symbols: ['spy.us'] },
+        { key: 'EU',     name: 'Europe (VGK ETF proxy)',       symbols: ['vgk.us','ieur.us'] },
+        { key: 'UKX',    name: 'UK (EWU ETF proxy)',           symbols: ['ewu.us','isf.uk'] },
+        { key: 'CN',     name: 'China Broad (MCHI/FXI proxy)', symbols: ['mchi.us','fxi.us'], proxy:true },
       ],
       bonds: [
-        { key: 'US10Y',  name: 'US 10Y Govt',        symbols: ['us10y'] },
-        { key: 'UK10Y',  name: 'UK 10Y Govt',        symbols: ['uk10y'] },
-        { key: 'DE10Y',  name: 'Germany 10Y Govt',   symbols: ['de10y'] },
-        { key: 'JP10Y',  name: 'Japan 10Y Govt',     symbols: ['jp10y'] },
-        { key: 'CN10Y',  name: 'China 10Y Govt',     symbols: ['cn10y'] },
+        { key: 'US10Y',  name: 'US 10Y Govt',      symbols: ['us10y'] },
+        { key: 'UK10Y',  name: 'UK 10Y Govt',      symbols: ['uk10y'] },
+        { key: 'DE10Y',  name: 'Germany 10Y Govt', symbols: ['de10y'] },
+        { key: 'JP10Y',  name: 'Japan 10Y Govt',   symbols: ['jp10y'] },
+        { key: 'CN10Y',  name: 'China 10Y Govt',   symbols: ['cn10y'] },
       ],
       commods: [
-        { key: 'XAU',    name: 'Gold (XAU/USD)',     symbols: ['xauusd'] },
-        { key: 'XAG',    name: 'Silver (XAG/USD)',   symbols: ['xagusd'] },
-        { key: 'WTI',    name: 'Crude Oil (WTI)',    symbols: ['cl.f'] },
-        { key: 'BRENT',  name: 'Crude Oil (Brent)',  symbols: ['br.f'] },
+        { key: 'XAU',    name: 'Gold (XAU/USD)',   symbols: ['xauusd'] },
+        { key: 'XAG',    name: 'Silver (XAG/USD)', symbols: ['xagusd'] },
+        { key: 'WTI',    name: 'Crude Oil (WTI)',  symbols: ['cl.f'] },
+        { key: 'BRENT',  name: 'Crude Oil (Brent)',symbols: ['br.f'] },
       ],
     };
 
@@ -303,10 +304,10 @@
         if (!el) return;
         el.classList.toggle('hide', v !== name);
       });
-      if (name === "audio") renderAudio();
-      if (name === "images") renderImages();
+      if (name === "audio")   renderAudio();
+      if (name === "images")  renderImages();
       if (name === "written") renderWritten(currentWrittenSection);
-      if (name === "ta") renderTA();
+      if (name === "ta")      renderTA();
       window.scrollTo(0,0);
     }
 
@@ -317,15 +318,75 @@
       return raw.split(/\s*-\s*/).map(line => `<p>${escapeHtml(line.trim())}</p>`).join("");
     }
 
+    // AUDIO + WRITTEN state
+    let currentAudioSection   = null; // null = show list of audio groups (e.g. "sets")
+    let currentWrittenSection = null; // null = show list of written groups
+
+    // ===== AUDIO =====
     function renderAudio(){
       const box = $("#audio-items");
       box.innerHTML = "";
-      if (!AUDIO_ITEMS.length) { box.textContent = "(empty — add items in AUDIO_ITEMS)"; return; }
-      AUDIO_ITEMS.forEach(item => {
-        const card = document.createElement("div"); card.className = "card";
-        const p = document.createElement("p"); p.textContent = item.title || item.src;
-        const a = document.createElement("audio"); a.setAttribute("controls",""); a.src = item.src;
-        card.appendChild(p); card.appendChild(a); box.appendChild(card);
+
+      // No subsection selected: show audio groups
+      if (!currentAudioSection) {
+        const list = document.createElement("ul");
+        list.className = "list";
+
+        const sections = [
+          { key: "sets", label: "sets" }
+        ];
+
+        sections.forEach(s => {
+          const li = document.createElement("li");
+          const a  = document.createElement("a");
+          a.href = `#audio/${s.key}`;
+          a.textContent = s.label;
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+
+        box.appendChild(list);
+        return;
+      }
+
+      // Subsection selected: show tracks in that subsection
+      const items = AUDIO_SECTIONS[currentAudioSection] || [];
+
+      if (!items.length) {
+        const p = document.createElement("p");
+        p.textContent = "(empty — add tracks to AUDIO_SECTIONS." + currentAudioSection + ")";
+        box.appendChild(p);
+        return;
+      }
+
+      items.forEach(item => {
+        const card   = document.createElement("div");
+        card.className = "card";
+
+        // add folk-background ONLY to Canon High 2023
+        if (item.id === "canon-high-2023") {
+          card.classList.add("card--canon");
+        }
+        
+        if (item.id === "2023/10/15") {
+          card.classList.add("card--oct15");
+        }
+
+        if (item.id === "Practicing Emotional Balance") {
+          card.classList.add("card--balance");
+        }   
+
+
+        const title  = document.createElement("p");
+        title.textContent = item.title || item.id;
+
+        const player = document.createElement("audio");
+        player.setAttribute("controls", "");
+        player.src = item.src;
+
+        card.appendChild(title);
+        card.appendChild(player);
+        box.appendChild(card);
       });
     }
 
@@ -355,20 +416,18 @@
     }
 
     // ===== WRITTEN =====
-    let currentWrittenSection = null; // null = show section list
-
     function renderWritten(section){
       const box = $("#written-items");
       box.innerHTML = "";
 
       if (!section){
         const sections = [
-          {key:"poetry", label:"poetry"},
+          {key:"poetry",      label:"poetry"},
           {key:"transcripts", label:"transcripts"}
         ];
         sections.forEach(s=>{
           const li = document.createElement("li");
-          const a = document.createElement("a");
+          const a  = document.createElement("a");
           a.href = `#written/${s.key}`;
           a.textContent = s.label;
           li.appendChild(a);
@@ -386,7 +445,7 @@
       }
       items.forEach(item => {
         const li = document.createElement("li");
-        const a = document.createElement("a");
+        const a  = document.createElement("a");
         a.href = `#written/${section}/${item.id}`;
         a.textContent = item.title || item.id;
         li.appendChild(a);
@@ -403,7 +462,7 @@
     }
 
     function renderWrittenView(id){
-      const found = findWrittenItem(id);
+      const found   = findWrittenItem(id);
       const titleEl = $("#written-view-title");
       const bodyEl  = $("#written-view-body");
       if (!found){
@@ -415,11 +474,20 @@
       bodyEl.innerHTML = poemToHtml(found.item.raw);
     }
 
+    // ===== ROUTER =====
     function route(){
-      const hash = (location.hash || "#").slice(1);
+      const hash  = (location.hash || "#").slice(1);
       const parts = hash.split("/").filter(Boolean);
-      const top = parts[0] || "home";
+      const top   = parts[0] || "home";
 
+      // AUDIO routing: #audio or #audio/sets
+      if (top === "audio") {
+        currentAudioSection = parts[1] || null;  // e.g. "sets"
+        showView("audio");
+        return;
+      }
+
+      // WRITTEN routing
       if (top === "written"){
         if (parts.length === 3){
           const [, , id] = parts;
@@ -432,12 +500,17 @@
         return;
       }
 
+      // DATA → technical analysis
       if (top === "data" && parts[1] === "technical-analysis"){
         showView("ta");
         return;
       }
 
-      if (!views.includes(top)) { showView("home"); return; }
+      // default
+      if (!views.includes(top)) {
+        showView("home");
+        return;
+      }
       showView(top);
     }
 
@@ -476,7 +549,7 @@
       const lines = csv.trim().split(/\r?\n/);
       if (lines.length < 2) return [];
       const headers = lines[0].split(",");
-      const idxDate = headers.indexOf("Date");
+      const idxDate  = headers.indexOf("Date");
       const idxClose = headers.indexOf("Close");
       const out = [];
       for (let i=1;i<lines.length;i++){
@@ -499,7 +572,7 @@
     async function loadSeries(possibleSymbols){
       for (const s of possibleSymbols){
         try{
-          const csv = await fetchStooqCSV(s);
+          const csv    = await fetchStooqCSV(s);
           const parsed = parseStooqCSV(csv);
           if (parsed && parsed.length) return { symbol:s, data: parsed };
         }catch(e){}
@@ -545,7 +618,7 @@
           try{
             const {symbol, data} = await loadSeries(item.symbols);
             const last = data[data.length-1]?.close;
-            const tag = (item.proxy?'proxy · ':'') + (symbol==='fallback'?'offline':'live');
+            const tag  = (item.proxy?'proxy · ':'') + (symbol==='fallback'?'offline':'live');
             makeTile(g.box, item, `${g.fmt(last)}  ·  ${tag}`);
           }catch{
             makeTile(g.box, item, `—  ·  offline`);
@@ -556,8 +629,8 @@
 
     // ===== Modal + Chart =====
     let chart;
-    const modal = $("#modal");
-    const modalTitle = $("#modal-title");
+    const modal       = $("#modal");
+    const modalTitle  = $("#modal-title");
     const modalLegend = $("#modal-legend");
     const modalCanvas = $("#modal-canvas");
     $("#modal-close").addEventListener('click', closeModal);
@@ -572,8 +645,8 @@
     async function openChart(item){
       const {symbol, data} = await loadSeries(item.symbols);
       const filtered = lastNYears(data, 5);
-      const labels = filtered.map(x => x.date.toISOString().slice(0,10));
-      const values = filtered.map(x => x.close);
+      const labels   = filtered.map(x => x.date.toISOString().slice(0,10));
+      const values   = filtered.map(x => x.close);
 
       if (chart) chart.destroy();
       chart = new Chart(modalCanvas.getContext('2d'), {
@@ -609,8 +682,8 @@
     }
 
     // ===== IMAGE MODAL =====
-    const imgModal = $("#img-modal");
-    const imgModalImg = $("#img-modal-img");
+    const imgModal        = $("#img-modal");
+    const imgModalImg     = $("#img-modal-img");
     const imgModalCaption = $("#img-modal-caption");
 
     function openImgModal(item){
@@ -627,7 +700,6 @@
 
     $("#img-modal-close").addEventListener("click", closeImgModal);
     imgModal.addEventListener("click", (e)=>{ if (e.target === imgModal) closeImgModal(); });
-
   </script>
 </body>
 </html>
