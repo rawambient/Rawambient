@@ -213,25 +213,26 @@
 
     // Grouped audio sections (e.g. DJ sets, mixes, etc.)
     const AUDIO_SECTIONS = {
-      sets: [
-        {
-          id: "canon-high-2023",
-          title: "Canon High 2023",
-          // adjust this path if you name/place the file differently
-          src: "audio/canon-high-2023.mp3"
-        },
-        {
-          id: "2023/10/15",
-          title: "2023/10/15",
-          src: "audio/20231015.wav"
-        },
-        {
-          id: "Practicing Emotional Balance",
-          title: "Practicing Emotional Balance",
-          src: "audio/Practicing Emotional Balance.wav"
-        }
-      ]
-    };
+  sets: [
+    {
+      id: "canon-high-2023",
+      title: "Canon High 2023",
+      // keep this local for now OR swap to a Dropbox link later
+      src: "https://dl.dropboxusercontent.com/scl/fi/3a9xv33z7320qs6ud1yxf/canon-high-2023.mp3?rlkey=u4zo23qnwaj25lqghbkz59ncy&st=0cg1clqv"
+    },
+    {
+      id: "2023/10/15",
+      title: "2023/10/15",
+      src: "https://dl.dropboxusercontent.com/scl/fi/wlz24kt06w8joh5vs4as7/20231015.wav?rlkey=n0edgesvq3ju3qov77prijmsx&st=19o0t4av"
+    },
+    {
+      id: "Practicing Emotional Balance",
+      title: "Practicing Emotional Balance",
+      src: "https://dl.dropboxusercontent.com/scl/fi/nis4eoaqgbr5e8ynw1bco/Practicing-Emotional-Balance.wav?rlkey=td5szcst23za7dzlnkxytzklx&st=4vriyeif"
+    }
+  ]
+};
+
 
     // Add your images here. Each object MUST be wrapped in { } and separated by commas.
     const IMAGE_ITEMS = [
@@ -348,7 +349,6 @@
         box.appendChild(list);
         return;
       }
-
       // Subsection selected: show tracks in that subsection
       const items = AUDIO_SECTIONS[currentAudioSection] || [];
 
