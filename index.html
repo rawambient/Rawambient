@@ -28,40 +28,33 @@
     .list li+li{margin-top:.75rem}
 
     /* CARD BASE */
-    /* Base card */
-.card{
-  border:2px solid var(--fg);
-  border-radius:16px;
-  padding:1rem;
-  position:relative;
-  overflow:hidden;
-}
+    .card{
+      border:2px solid var(--fg);
+      border-radius:16px;
+      padding:1rem;
+      position:relative;
+      overflow:hidden;
+    }
 
-/* Canon High 2023 – fill entire interior with folk image */
-.card--canon{
-  background-image:url("Images 1/IMG_2896.jpg");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:cover;   /* fills the whole interior of the border */
-}
-
-/* 2023/10/15 – fill card with goats/tree design */
-.card--oct15{
-  background-image:url("Images 2/BD0424D8-6DE9-47C7-88A3-CBE8A80D47B0.PNG");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:cover;
-}
-
-/* Practicing Emotional Balance – card background */
-.card--balance{
-  background-image:url("Images 1/IMG_3060.jpg");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:cover;
-}
-
-
+    /* (kept) old card backgrounds if you still use card list elsewhere */
+    .card--canon{
+      background-image:url("Images 1/IMG_2896.jpg");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:cover;
+    }
+    .card--oct15{
+      background-image:url("Images 2/BD0424D8-6DE9-47C7-88A3-CBE8A80D47B0.PNG");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:cover;
+    }
+    .card--balance{
+      background-image:url("Images 1/IMG_3060.jpg");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:cover;
+    }
 
     audio{width:100%;display:block}
 
@@ -92,6 +85,159 @@
     .btn{border:2px solid var(--fg);background:transparent;color:var(--fg);padding:.45rem .75rem;border-radius:10px;font-size:.95rem;cursor:pointer}
     .btn:hover{background:rgba(255,26,26,.08)}
     .legend{font-size:.9rem;color:var(--fg-dim);margin-top:.35rem}
+
+    /* ===========================
+       AUDIO: FULL-VIEWPORT, MENU UNDER TITLE, RED/BLUE UI
+       =========================== */
+    body.audio-mode{overflow:hidden}
+
+    #audio{
+      position:fixed;
+      inset:0;
+      margin:0;
+      padding:0;
+      overflow:hidden;
+      background:var(--bg); /* back to blue */
+    }
+    #audio .content{
+      height:100%;
+      padding:0;
+    }
+    #audio #audio-items{
+      height:100%;
+    }
+
+    /* fixed title + menu */
+    #audio .site-title{
+      position:absolute;
+      left:clamp(18px, 3vw, 44px);
+      top:clamp(14px, 2vw, 28px);
+      z-index:6;
+      margin:0;
+      padding:0;
+      pointer-events:none;
+      text-shadow:0 2px 14px rgba(0,0,0,.35);
+    }
+
+    /* menu (e.g. "sets") placed UNDER the title */
+    .audio-menu{
+      position:absolute;
+      left:clamp(18px, 3vw, 44px);
+      top:clamp(86px, 10.5vw, 160px);
+      z-index:6;
+      font-size:1.05rem;
+    }
+    .audio-menu a{
+      display:inline-block;
+      border-bottom:2px solid currentColor;
+      padding-bottom:2px;
+    }
+
+    /* keep back visible and not overlapped */
+    #audio .foot{
+      position:absolute;
+      left:clamp(18px, 3vw, 44px);
+      bottom:clamp(14px, 2vw, 28px);
+      z-index:7;
+      margin:0;
+      color:var(--fg-dim);
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+
+    /* ===== SETS CAROUSEL (true full bleed) ===== */
+    .sets-shell{
+      position:relative;
+      height:100%;
+      width:100%;
+      margin:0;
+    }
+
+    .sets-carousel{
+      height:100%;
+      width:100%;
+      display:flex;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scroll-behavior:smooth;
+      border:none;
+      border-radius:0;
+      background:transparent;
+      scrollbar-width:none;
+    }
+    .sets-carousel::-webkit-scrollbar{display:none}
+
+    .set-slide{
+      flex:0 0 100%;
+      width:100%;
+      height:100%;
+      scroll-snap-align:start;
+      position:relative;
+      overflow:hidden;
+
+      background-color:#000;
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:cover;
+    }
+
+    .set-slide::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 600px at 15% 85%, rgba(0,0,0,.55), transparent 60%),
+        linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,.10) 55%, rgba(0,0,0,.40));
+      pointer-events:none;
+    }
+
+    /* player bar moved UP so footer/back stays clearly visible */
+    .set-overlay{
+      position:absolute;
+      left:clamp(18px, 3vw, 44px);
+      right:clamp(18px, 3vw, 44px);
+      bottom:clamp(64px, 6vw, 96px); /* higher than before */
+      z-index:5;
+
+      border:1.5px solid rgba(255,26,26,.85);
+      border-radius:18px;
+      padding:1rem 1.1rem;
+      background:rgba(0,48,255,.55); /* back to blue */
+      backdrop-filter: blur(10px);
+    }
+
+    .set-title{
+      margin:0 0 .75rem;
+      font-size:clamp(1.2rem, 2.2vw, 1.8rem);
+      letter-spacing:-.01em;
+      text-transform:lowercase;
+    }
+    .set-audio{width:100%;display:block}
+    .set-hint{display:none}
+
+    .set-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;height:44px;
+      border-radius:999px;
+      border:1.5px solid rgba(255,26,26,.85);
+      background:rgba(0,48,255,.35); /* back to blue */
+      color:var(--fg);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+      font-size:26px;
+      line-height:1;
+      z-index:6;
+      backdrop-filter: blur(10px);
+    }
+    .set-arrow:hover{background:rgba(0,48,255,.55)}
+    .set-arrow:disabled{opacity:.25; cursor:default}
+    .set-arrow.left{left:16px}
+    .set-arrow.right{right:16px}
   </style>
 </head>
 <body>
@@ -110,7 +256,7 @@
   </section>
 
   <!-- AUDIO -->
-  <section id="audio" class="view wrap hide" data-page="audio">
+  <section id="audio" class="view hide" data-page="audio">
     <h1 class="site-title">Rawambient / audio</h1>
     <main class="content">
       <div id="audio-items" class="stack"></div>
@@ -209,39 +355,46 @@
 
   <script>
     // ===== CONTENT ARRAYS =====
-    const AUDIO_ITEMS = []; // currently unused; kept for future simple audio list if you want it
+    const AUDIO_ITEMS = []; // kept for future
 
-    // Grouped audio sections (e.g. DJ sets, mixes, etc.)
+    // Grouped audio sections
     const AUDIO_SECTIONS = {
-  sets: [
-    {
-      id: "canon-high-2023",
-      title: "Canon High 2023",
-      // keep this local for now OR swap to a Dropbox link later
-      src: "https://dl.dropboxusercontent.com/scl/fi/3a9xv33z7320qs6ud1yxf/canon-high-2023.mp3?rlkey=u4zo23qnwaj25lqghbkz59ncy&st=0cg1clqv"
-    },
-    {
-      id: "2023/10/15",
-      title: "2023/10/15",
-      src: "https://dl.dropboxusercontent.com/scl/fi/wlz24kt06w8joh5vs4as7/20231015.wav?rlkey=n0edgesvq3ju3qov77prijmsx&st=19o0t4av"
-    },
-    {
-      id: "Practicing Emotional Balance",
-      title: "Practicing Emotional Balance",
-      src: "https://dl.dropboxusercontent.com/scl/fi/nis4eoaqgbr5e8ynw1bco/Practicing-Emotional-Balance.wav?rlkey=td5szcst23za7dzlnkxytzklx&st=4vriyeif"
-    },
-    {
-      id: "CODA",
-      title: "CODA",
-      src: "https://dl.dropboxusercontent.com/scl/fi/hc0snibklo2zai44f8bzs/CODA.wav?rlkey=7uejq69v8ro8nvl5dz75wg07c&st=s20p963p"
-    }
-  ]
-};
+      sets: [
+        {
+          id: "canon-high-2023",
+          title: "Canon High 2023",
+          src: "https://dl.dropboxusercontent.com/scl/fi/3a9xv33z7320qs6ud1yxf/canon-high-2023.mp3?rlkey=u4zo23qnwaj25lqghbkz59ncy&st=0cg1clqv",
+          bg: "Images 2/BD0424D8-6DE9-47C7-88A3-CBE8A80D47B0.PNG"
+        },
+        {
+          id: "2023-10-15",
+          title: "2023/10/15",
+          src: "https://dl.dropboxusercontent.com/scl/fi/wlz24kt06w8joh5vs4as7/20231015.wav?rlkey=n0edgesvq3ju3qov77prijmsx&st=19o0t4av",
+          bg: "Images 1/IMG_2896.jpg"
+        },
+        {
+          id: "practicing-emotional-balance",
+          title: "Practicing Emotional Balance",
+          src: "https://dl.dropboxusercontent.com/scl/fi/nis4eoaqgbr5e8ynw1bco/Practicing-Emotional-Balance.wav?rlkey=td5szcst23za7dzlnkxytzklx&st=4vriyeif",
+          bg: "Images 1/orpheus_painter3.jpg"
+        },
+        {
+          id: "coda",
+          title: "CODA",
+          src: "https://dl.dropboxusercontent.com/scl/fi/hc0snibklo2zai44f8bzs/CODA.wav?rlkey=7uejq69v8ro8nvl5dz75wg07c&st=s20p963p",
+          bg: ""
+        },
+        {
+          id: "pinnacle-high-2023",
+          title: "Pinnacle High 2023",
+          src: "",
+          bg: ""
+        }
+      ]
+    };
 
-
-    // Add your images here. Each object MUST be wrapped in { } and separated by commas.
+    // Images
     const IMAGE_ITEMS = [
-      // from “Images 1” folder
       { src: "Images 1/DSC_0031.JPG", caption: "DSC_0031" },
       { src: "Images 1/6AB59D8C-EE7F-4963-8F0C-AC33BF0C9BDC.jpeg", caption: "6AB59D8C..." },
       { src: "Images 1/59D70E52-9F0D-4040-AA9E-BBF524C52747_1_102_o.jpeg", caption: "59D70E52..." },
@@ -251,8 +404,6 @@
       { src: "Images 1/3FB966C7-91DC-4F71-B6AF-0C556F0138CD_1_105_c.jpeg", caption: "3FB966C7..." },
       { src: "Images 1/8E8D7EA9-33BA-4F35-A874-6A7E26C055F2.jpeg", caption: "8E8D7EA9..." },
       { src: "Images 1/8F595C5C-BC05-4A47-8E8D-31689D1FF06D.jpeg", caption: "8F595C5C..." },
-
-      // from “Images 2” folder
       { src: "Images 2/4A390439-B44A-40FF-A65A-5C94DD38EF7E_1_102_o.jpeg", caption: "4A390439..." },
       { src: "Images 2/642CAB09-4E58-4801-B1AB-E47F9B51063E_1_102_o.jpeg", caption: "642CAB09..." },
       { src: "Images 2/BC29B74F-BCAA-498A-B191-E84225453888_1_102_o.jpeg", caption: "BC29B74F..." },
@@ -310,11 +461,15 @@
         if (!el) return;
         el.classList.toggle('hide', v !== name);
       });
+
+      document.body.classList.toggle('audio-mode', name === "audio");
+
       if (name === "audio")   renderAudio();
       if (name === "images")  renderImages();
       if (name === "written") renderWritten(currentWrittenSection);
       if (name === "ta")      renderTA();
-      window.scrollTo(0,0);
+
+      if (name !== "audio") window.scrollTo(0,0);
     }
 
     function escapeHtml(s){
@@ -325,38 +480,112 @@
     }
 
     // AUDIO + WRITTEN state
-    let currentAudioSection   = null; // null = show list of audio groups (e.g. "sets")
-    let currentWrittenSection = null; // null = show list of written groups
+    let currentAudioSection   = null;
+    let currentWrittenSection = null;
+
+    // ===== SETS CAROUSEL RENDERER =====
+    function renderSetsCarousel(items, mount){
+      mount.innerHTML = "";
+      mount.classList.remove("stack");
+
+      const shell = document.createElement("div");
+      shell.className = "sets-shell";
+
+      const scroller = document.createElement("div");
+      scroller.className = "sets-carousel";
+      scroller.setAttribute("aria-label", "DJ sets carousel");
+
+      items.forEach((item, idx) => {
+        const slide = document.createElement("section");
+        slide.className = "set-slide";
+        slide.id = `set-${item.id || idx}`;
+
+        if (item.bg) slide.style.backgroundImage = `url("${item.bg}")`;
+        else slide.style.backgroundImage = "none";
+
+        const overlay = document.createElement("div");
+        overlay.className = "set-overlay";
+
+        const h = document.createElement("h2");
+        h.className = "set-title";
+        h.textContent = item.title || item.id || `Set ${idx+1}`;
+
+        const audio = document.createElement("audio");
+        audio.className = "set-audio";
+        audio.controls = true;
+        audio.preload = "none";
+        audio.src = item.src || "";
+
+        overlay.appendChild(h);
+        overlay.appendChild(audio);
+        slide.appendChild(overlay);
+        scroller.appendChild(slide);
+      });
+
+      const btnL = document.createElement("button");
+      btnL.className = "set-arrow left";
+      btnL.type = "button";
+      btnL.innerHTML = "‹";
+      btnL.setAttribute("aria-label", "Previous set");
+
+      const btnR = document.createElement("button");
+      btnR.className = "set-arrow right";
+      btnR.type = "button";
+      btnR.innerHTML = "›";
+      btnR.setAttribute("aria-label", "Next set");
+
+      function currentIndex(){
+        const w = scroller.clientWidth || 1;
+        return Math.round(scroller.scrollLeft / w);
+      }
+      function updateButtons(i){
+        btnL.disabled = i <= 0;
+        btnR.disabled = i >= items.length - 1;
+      }
+      function goTo(i){
+        const clamped = Math.max(0, Math.min(items.length - 1, i));
+        scroller.scrollTo({ left: clamped * scroller.clientWidth, behavior: "smooth" });
+        updateButtons(clamped);
+      }
+
+      btnL.addEventListener("click", () => goTo(currentIndex() - 1));
+      btnR.addEventListener("click", () => goTo(currentIndex() + 1));
+      scroller.addEventListener("scroll", () => updateButtons(currentIndex()));
+
+      shell.tabIndex = 0;
+      shell.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft")  goTo(currentIndex() - 1);
+        if (e.key === "ArrowRight") goTo(currentIndex() + 1);
+      });
+
+      shell.appendChild(scroller);
+      shell.appendChild(btnL);
+      shell.appendChild(btnR);
+      mount.appendChild(shell);
+
+      updateButtons(0);
+    }
 
     // ===== AUDIO =====
     function renderAudio(){
       const box = $("#audio-items");
       box.innerHTML = "";
 
-      // No subsection selected: show audio groups
+      // No subsection selected: show audio groups UNDER the title
       if (!currentAudioSection) {
-        const list = document.createElement("ul");
-        list.className = "list";
+        const menu = document.createElement("div");
+        menu.className = "audio-menu";
 
-        const sections = [
-          { key: "sets", label: "sets" }
-        ];
+        const a = document.createElement("a");
+        a.href = `#audio/sets`;
+        a.textContent = "sets";
 
-        sections.forEach(s => {
-          const li = document.createElement("li");
-          const a  = document.createElement("a");
-          a.href = `#audio/${s.key}`;
-          a.textContent = s.label;
-          li.appendChild(a);
-          list.appendChild(li);
-        });
-
-        box.appendChild(list);
+        menu.appendChild(a);
+        box.appendChild(menu);
         return;
       }
-      // Subsection selected: show tracks in that subsection
-      const items = AUDIO_SECTIONS[currentAudioSection] || [];
 
+      const items = AUDIO_SECTIONS[currentAudioSection] || [];
       if (!items.length) {
         const p = document.createElement("p");
         p.textContent = "(empty — add tracks to AUDIO_SECTIONS." + currentAudioSection + ")";
@@ -364,25 +593,15 @@
         return;
       }
 
+      if (currentAudioSection === "sets") {
+        renderSetsCarousel(items, box);
+        return;
+      }
+
       items.forEach(item => {
-        const card   = document.createElement("div");
+        const card = document.createElement("div");
         card.className = "card";
-
-        // add folk-background ONLY to Canon High 2023
-        if (item.id === "canon-high-2023") {
-          card.classList.add("card--canon");
-        }
-        
-        if (item.id === "2023/10/15") {
-          card.classList.add("card--oct15");
-        }
-
-        if (item.id === "Practicing Emotional Balance") {
-          card.classList.add("card--balance");
-        }   
-
-
-        const title  = document.createElement("p");
+        const title = document.createElement("p");
         title.textContent = item.title || item.id;
 
         const player = document.createElement("audio");
@@ -485,14 +704,12 @@
       const parts = hash.split("/").filter(Boolean);
       const top   = parts[0] || "home";
 
-      // AUDIO routing: #audio or #audio/sets
       if (top === "audio") {
-        currentAudioSection = parts[1] || null;  // e.g. "sets"
+        currentAudioSection = parts[1] || null;
         showView("audio");
         return;
       }
 
-      // WRITTEN routing
       if (top === "written"){
         if (parts.length === 3){
           const [, , id] = parts;
@@ -505,13 +722,11 @@
         return;
       }
 
-      // DATA → technical analysis
       if (top === "data" && parts[1] === "technical-analysis"){
         showView("ta");
         return;
       }
 
-      // default
       if (!views.includes(top)) {
         showView("home");
         return;
